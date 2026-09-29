@@ -1,156 +1,220 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="3.1.0" client="site" method="upgrade">
-    <name>Community Builder list module</name>
-    <author>Tazzios (original Magnus Hasselquist https://github.com/magnushasselquist/hqcblistmodule) </author>
-    <authorUrl>https://github.com/Tazzios</authorUrl>
-    <version>3.0.3</version>
-    <creationDate>2022-02-15</creationDate>
-    <license>GNU General Public License version 2 or later</license>
-    <description>Displaying Users from a selected CB List in a Module.</description>
+<extension type="module" client="site" method="upgrade">
+    <name>MOD_CBLISTMODULE</name>
+    <author>Magnus Hasselquist, Tazzios</author>
+    <authorEmail>magnus.hasselquist@gmail.com</authorEmail>
+    <authorUrl>https://github.com/magnushasselquist/cblistmodule</authorUrl>
+    <creationDate>2026-09</creationDate>
+    <copyright>(C) 2014 Magnus Hasselquist, (C) 2021 Tazzios</copyright>
+    <license>GNU General Public License version 2 or later; see LICENSE</license>
+    <version>4.0.0</version>
+    <description>MOD_CBLISTMODULE_XML_DESCRIPTION</description>
+    <namespace path="src">Hasselquist\Module\CbList</namespace>
+    <scriptfile>script.php</scriptfile>
     <files>
+        <folder module="mod_cblistmodule">services</folder>
+        <folder>src</folder>
+        <folder>tmpl</folder>
+        <folder>language</folder>
         <filename>mod_cblistmodule.xml</filename>
-        <filename module="mod_cblistmodule">mod_cblistmodule.php</filename>
-        <filename>index.html</filename>
-        <filename>helper.php</filename>
-        <filename>tmpl/default.php</filename>
-        <filename>tmpl/index.html</filename>
+        <filename>script.php</filename>
     </files>
-
     <config>
-    	<fields name="params">
-    		<fieldset name="basic">
-       			<field
-               		name="listid"
-               		type="sql"
-               		default=""
-               		label="SELECT the CB List to be presented in the module"
-               		key_field="listid"
-               		value_field="title"
-               		query="SELECT listid, title FROM #__comprofiler_lists where published=1" />
-		<field
-			name="user-limit"
-			
-			filter="integer" 
-			
-			default="10"
-			label="Number of users to show"	/>
-			<field
-               		name="orderby"
-               		type="sql"
-               		default="list default"
-               		label="Order by field"
-               		key_field="id"
-               		value_field="title"
-               		query="SELECT 0 AS sort, 'list_default' AS id, 'List default' AS title UNION SELECT 1 AS sort, name AS id, name AS title FROM #__comprofiler_fields WHERE published=1 ORDER BY sort,title ASC" />
-			<field 
-					name="sortorder" type="list"
-					default="list"
-					label="Sort order"
-				>
-				<option value="list_default">List default</option>
-				<option value="asc">Ascending </option>
-				<option value="desc">Descending</option>
-				<option value="random">Random</option>				
-			</field>	
-                  <field
-                		name="text-above"
-                		type="editor"
-                		label="Text to be included ABOVE the user list."
- 					        buttons="false"
- 					        filter="raw" />
-		<field 
-			name="columns" type="list"
-			default="0"
-			label="Number of columns"
-			>
-				<option value="0">Responsive auto-fit</option>
-				<option value="1">1</option>
-				<option value="2">2</option>
-				<option value="3">3</option>
-				<option value="4">4</option>
-				<option value="5">5</option>
-				<option value="6">6</option>
-				<option value="7">7</option>
-				<option value="8">8</option>
-				<option value="9">9</option>
-				<option value="10">10</option>							
-		</field>
-		<field 
-		name="Minwidth" 
-		type="text" default="5" 
-		label="Minimum width column (rem)"
-		filter="integer" 		
-		description=""/>
-		
-		<field
-		name="template"
-		type="editor"
-		label="Template for displaying each user. Use [cb_fieldname] syntax to include fields."
-			buttons="false"
-			default="&lt;div class=&quot;yourclasstostyle&quot;&gt;[show_avatar]&lt;/div&gt;&lt;div class=&quot;yourclasstostyle&quot;&gt;[Linked_name]&lt;/div&gt;"
-			filter="raw" />
-			
-				<field
-				name="rules"
-				type="subform"
-				default='{&quot;rules0&quot;:{&quot;tag_name&quot;:&quot;avatar&quot;,&quot;htmlcode&quot;:&quot;[avatar]&quot;,&quot;htmlcode_no&quot;:&quot;components\/com_comprofiler\/plugin\/templates\/default\/images\/avatar\/tnnophoto_n.png&quot;},&quot;rules1&quot;:{&quot;tag_name&quot;:&quot;show_avatar&quot;,&quot;htmlcode&quot;:&quot;&lt;a href=\&quot;cb-profile\/[user_id]\&quot;&gt;&lt;img src=\&quot;[avatar]\&quot; alt=\&quot;[name]\&quot; title=\&quot;[name]\&quot; width=\&quot;80\&quot; height=\&quot;80\&quot; \/&gt;&lt;\/a&gt;&quot;,&quot;htmlcode_no&quot;:&quot;Not used with a custom tag name&quot;},&quot;rules2&quot;:{&quot;tag_name&quot;:&quot;canvas&quot;,&quot;htmlcode&quot;:&quot;&lt;img src=\&quot;[canvas]\&quot; width=\&quot;100\&quot; height=\&quot;60\&quot; \/&gt;&quot;,&quot;htmlcode_no&quot;:&quot;There is no canvas image&quot;},&quot;rules3&quot;:{&quot;tag_name&quot;:&quot;Linked_name&quot;,&quot;htmlcode&quot;:&quot;&lt;a href=\&quot;cb-profile\/[user_id]\&quot;&gt;[name]&lt;\/a&gt;&quot;,&quot;htmlcode_no&quot;:&quot;Not used with a custom tag name&quot;}}'
-				label="Rules"
-				description="Here you can create a rule for each tag"
-				multiple="true"
-				min="0"
-				max="10"
-				>
-				<form>
-					<field
-						name="tag_name"
-						default=""
-						type="text"
-						label="tag name"
-						description=""
-						/>
-					<field
-						name="htmlcode"
-						type="textarea"
-						default=""
-						label="html code to replace tag with"
-						filter="raw"
-						description="Insert here your html code to show when data is available. You can use tags like [name]."
-						cols="20"
-						rows="4"
-						/>
-					<field
-						name="htmlcode_no"
-						type="textarea"
-						default=""
-						label="html code to replace tag with when there is no data available"
-						filter="raw"
-						description="Insert here your html code to place when no data is available"
-						cols="20"
-						rows="4"
-						/>
-				</form>
-			</field>	
-							
-							
-						
-		<field
-			name="text-below"
-			type="editor"
-			label="Text to be included UNDER the user list"
-				buttons="false"
-				filter="raw" />
-		  <field 
-			 	name="debug" type="radio"
-				default="0"
-				label="Turn on DEBUG output to help find errors in list filter (make sure to turn off in production)."
-				>
-					<option value="0">OFF</option>
-					<option value="1">ON</option>
-				</field>			
-    		</fieldset>
-		</fields>
+        <fields name="params">
+            <fieldset name="basic">
+                <field
+                    name="listid"
+                    type="sql"
+                    default=""
+                    label="MOD_CBLISTMODULE_FIELD_LISTID_LABEL"
+                    description="MOD_CBLISTMODULE_FIELD_LISTID_DESC"
+                    key_field="listid"
+                    value_field="title"
+                    query="SELECT listid, title FROM #__comprofiler_lists WHERE published = 1 ORDER BY title"
+                    required="true"
+                />
+                <field
+                    name="user-limit"
+                    type="number"
+                    filter="integer"
+                    min="0"
+                    step="1"
+                    default="10"
+                    label="MOD_CBLISTMODULE_FIELD_USER_LIMIT_LABEL"
+                    description="MOD_CBLISTMODULE_FIELD_USER_LIMIT_DESC"
+                />
+                <field
+                    name="orderby"
+                    type="sql"
+                    default="list_default"
+                    label="MOD_CBLISTMODULE_FIELD_ORDERBY_LABEL"
+                    description="MOD_CBLISTMODULE_FIELD_ORDERBY_DESC"
+                    key_field="id"
+                    value_field="title"
+                    query="SELECT 0 AS sort, 'list_default' AS id, 'List default' AS title UNION SELECT 1 AS sort, name AS id, name AS title FROM #__comprofiler_fields WHERE published = 1 AND tablecolumns &lt;&gt; '' ORDER BY sort, title ASC"
+                />
+                <field
+                    name="sortorder"
+                    type="list"
+                    default="list_default"
+                    label="MOD_CBLISTMODULE_FIELD_SORTORDER_LABEL"
+                    description="MOD_CBLISTMODULE_FIELD_SORTORDER_DESC"
+                    >
+                    <option value="list_default">MOD_CBLISTMODULE_OPTION_LIST_DEFAULT</option>
+                    <option value="asc">JGLOBAL_ORDER_ASCENDING</option>
+                    <option value="desc">JGLOBAL_ORDER_DESCENDING</option>
+                    <option value="random">MOD_CBLISTMODULE_OPTION_RANDOM</option>
+                </field>
+                <field
+                    name="columns"
+                    type="list"
+                    default="0"
+                    label="MOD_CBLISTMODULE_FIELD_COLUMNS_LABEL"
+                    description="MOD_CBLISTMODULE_FIELD_COLUMNS_DESC"
+                    >
+                    <option value="0">MOD_CBLISTMODULE_OPTION_AUTOFIT</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </field>
+                <field
+                    name="Minwidth"
+                    type="number"
+                    default="5"
+                    min="1"
+                    step="0.5"
+                    label="MOD_CBLISTMODULE_FIELD_MINWIDTH_LABEL"
+                    description="MOD_CBLISTMODULE_FIELD_MINWIDTH_DESC"
+                />
+                <field
+                    name="text-above"
+                    type="editor"
+                    label="MOD_CBLISTMODULE_FIELD_TEXT_ABOVE_LABEL"
+                    description="MOD_CBLISTMODULE_FIELD_TEXT_ABOVE_DESC"
+                    buttons="false"
+                    filter="raw"
+                />
+                <field
+                    name="template"
+                    type="editor"
+                    label="MOD_CBLISTMODULE_FIELD_TEMPLATE_LABEL"
+                    description="MOD_CBLISTMODULE_FIELD_TEMPLATE_DESC"
+                    buttons="false"
+                    filter="raw"
+                    default="&lt;div class=&quot;cblist-avatar&quot;&gt;[show_avatar]&lt;/div&gt;&lt;div class=&quot;cblist-name&quot;&gt;[linked_name]&lt;/div&gt;"
+                />
+                <field
+                    name="escape_values"
+                    type="radio"
+                    layout="joomla.form.field.radio.switcher"
+                    default="1"
+                    label="MOD_CBLISTMODULE_FIELD_ESCAPE_VALUES_LABEL"
+                    description="MOD_CBLISTMODULE_FIELD_ESCAPE_VALUES_DESC"
+                    >
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field
+                    name="rules"
+                    type="subform"
+                    label="MOD_CBLISTMODULE_FIELD_RULES_LABEL"
+                    description="MOD_CBLISTMODULE_FIELD_RULES_DESC"
+                    multiple="true"
+                    min="0"
+                    max="30"
+                    layout="joomla.form.field.subform.repeatable"
+                    default='{&quot;rules0&quot;:{&quot;tag_name&quot;:&quot;avatar&quot;,&quot;htmlcode&quot;:&quot;[avatar]&quot;,&quot;htmlcode_no&quot;:&quot;[site_url]components/com_comprofiler/plugin/templates/default/images/avatar/tnnophoto_n.png&quot;},&quot;rules1&quot;:{&quot;tag_name&quot;:&quot;show_avatar&quot;,&quot;htmlcode&quot;:&quot;&lt;a href=\&quot;[profile_url]\&quot;&gt;&lt;img src=\&quot;[avatar]\&quot; alt=\&quot;[name]\&quot; title=\&quot;[name]\&quot; width=\&quot;80\&quot; height=\&quot;80\&quot; /&gt;&lt;/a&gt;&quot;,&quot;htmlcode_no&quot;:&quot;Not used with a custom tag name&quot;},&quot;rules2&quot;:{&quot;tag_name&quot;:&quot;canvas&quot;,&quot;htmlcode&quot;:&quot;&lt;img src=\&quot;[canvas]\&quot; width=\&quot;100\&quot; height=\&quot;60\&quot; /&gt;&quot;,&quot;htmlcode_no&quot;:&quot;There is no canvas image&quot;},&quot;rules3&quot;:{&quot;tag_name&quot;:&quot;linked_name&quot;,&quot;htmlcode&quot;:&quot;&lt;a href=\&quot;[profile_url]\&quot;&gt;[name]&lt;/a&gt;&quot;,&quot;htmlcode_no&quot;:&quot;Not used with a custom tag name&quot;}}'
+                    >
+                    <form>
+                        <field
+                            name="tag_name"
+                            type="text"
+                            default=""
+                            label="MOD_CBLISTMODULE_FIELD_RULE_TAG_NAME_LABEL"
+                            description="MOD_CBLISTMODULE_FIELD_RULE_TAG_NAME_DESC"
+                        />
+                        <field
+                            name="accesslevel"
+                            type="accesslevel"
+                            label="MOD_CBLISTMODULE_FIELD_RULE_ACCESSLEVEL_LABEL"
+                            description="MOD_CBLISTMODULE_FIELD_RULE_ACCESSLEVEL_DESC"
+                            default="1"
+                            multiple="true"
+                            layout="joomla.form.field.list-fancy-select"
+                        />
+                        <field
+                            name="htmlcode"
+                            type="textarea"
+                            default=""
+                            label="MOD_CBLISTMODULE_FIELD_RULE_HTMLCODE_LABEL"
+                            description="MOD_CBLISTMODULE_FIELD_RULE_HTMLCODE_DESC"
+                            filter="raw"
+                            cols="20"
+                            rows="4"
+                        />
+                        <field
+                            name="htmlcode_no"
+                            type="textarea"
+                            default=""
+                            label="MOD_CBLISTMODULE_FIELD_RULE_HTMLCODE_NO_LABEL"
+                            description="MOD_CBLISTMODULE_FIELD_RULE_HTMLCODE_NO_DESC"
+                            filter="raw"
+                            cols="20"
+                            rows="4"
+                        />
+                    </form>
+                </field>
+                <field
+                    name="text-below"
+                    type="editor"
+                    label="MOD_CBLISTMODULE_FIELD_TEXT_BELOW_LABEL"
+                    description="MOD_CBLISTMODULE_FIELD_TEXT_BELOW_DESC"
+                    buttons="false"
+                    filter="raw"
+                />
+                <field
+                    name="debug"
+                    type="radio"
+                    layout="joomla.form.field.radio.switcher"
+                    default="0"
+                    label="MOD_CBLISTMODULE_FIELD_DEBUG_LABEL"
+                    description="MOD_CBLISTMODULE_FIELD_DEBUG_DESC"
+                    >
+                    <option value="0">JOFF</option>
+                    <option value="1">JON</option>
+                </field>
+            </fieldset>
+            <fieldset name="advanced">
+                <field
+                    name="layout"
+                    type="modulelayout"
+                    label="JFIELD_ALT_LAYOUT_LABEL"
+                    class="form-select"
+                    validate="moduleLayout"
+                />
+                <field
+                    name="moduleclass_sfx"
+                    type="textarea"
+                    label="COM_MODULES_FIELD_MODULECLASS_SFX_LABEL"
+                    rows="3"
+                    validate="CssIdentifier"
+                />
+                <field
+                    name="cache"
+                    type="hidden"
+                    default="0"
+                />
+            </fieldset>
+        </fields>
     </config>
     <updateservers>
-      <server type="extension" priority="2" name="Community Builder list module">https://raw.githubusercontent.com/tazzios/cblistmodule/master/updates.xml</server>
+        <server type="extension" priority="1" name="Community Builder list module">https://raw.githubusercontent.com/magnushasselquist/cblistmodule/main/updates.xml</server>
     </updateservers>
 </extension>
